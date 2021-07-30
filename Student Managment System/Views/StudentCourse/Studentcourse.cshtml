@@ -1,0 +1,144 @@
+﻿@model Student_Managment_System.Models.courename
+
+@{
+    ViewBag.Title = "Studentcourse";
+}
+<style>
+    table {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+</style>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.intellisense.js"></script>
+<style>
+    span {
+        color: red;
+    }
+    label {
+        color: red;
+    }
+</style>
+<h2>Studentcourse</h2>
+<form id="Form1" method="post">
+    <table>
+
+        <tr>
+            <td> Student Name : </td>
+            <td> <select name="txtStudentname" id="txtStudentname"  style="width:200px"/>       </td>            
+            <td style="width:40%"><span id="lblStudentname">*</span></td>
+        </tr>
+        <tr>
+            <td> Course Name : </td>
+            <td>
+            @using (Html.BeginForm())
+            {
+                @Html.ListBoxFor(x => x.selectedcourse,  Model.courselist, new { size = 8, @class = "form-control", @style = "max-width:300px;width:30%;" })
+
+            }
+            </td>           
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <label>@Html.DisplayFor(item => item.errormsg)</label>
+          </td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Submit" />
+            <td>
+        </tr>
+
+
+
+    </table>
+</form>
+
+<script>
+    function displaystudent() {
+
+        $("#txtStudentname").find("option").remove();
+        $.get("populatestudent", function (data) {
+            $.each($.parseJSON(data), function (index, row) {
+                $("#txtStudentname").append("<option value='" + row.StudentId + "'>" + row.FirstName + "</option>")
+            });
+        });
+    }
+    displaystudent();
+ </script>
+
+<script>
+    $(document).ready(function () {
+        $("#btnsave").click(function () {
+
+            var cnt = 0;
+            var elements = ["firstname", "surname", "dob", "address1"];
+
+            for (i = 0; i < elements.length; i++) {
+
+                var txtname = "#txt" + elements[i];
+                var lblname = "#lbl" + elements[i];
+
+                if ($(txtname).val() == "") {
+                    $(lblname).text("Required");
+                }
+                else {
+                    $(lblname).text("*");
+                    cnt++
+                }
+
+
+            }
+
+            if (cnt == elements.length) {
+
+
+                var form_data = new FormData(document.getElementById("Form1"));
+                form_data.append("label", "WEBUPLOAD");
+
+                var ID = $("#txtID").val();
+                var path = "AddStudent";
+
+
+                $.ajax({
+                    url: path,
+                    type: "POST",
+                    data: form_data,
+                    processData: false,  // tell jQuery not to process the data
+                    contentType: false   // tell jQuery not to set contentType
+                }).done(function (data) {
+                    console.log(data);
+                    $('#Form1')[0].reset();
+                    alert(data);
+
+                    fetchdata();
+                });
+
+
+            }
+        });
+    });
+
+</script>
