@@ -1,7 +1,7 @@
 
 Following are the information about folder
 
-1. Student Managment System.dox - Task explanation in detail
+1. Student Managment System.doc - Task explanation in detail
 
 2. Project Code-Student Managment System
   		Business Layer
